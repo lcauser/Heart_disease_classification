@@ -30,7 +30,20 @@ numExperiments = 10000
 # Load the file
 fileName = "heart.csv"
 data = pd.read_csv(fileName)
-data = data.drop(['chol', 'fbs'], axis=1)
+
+# Split data into caterogical
+cats = ['cp', 'exang', 'slope', 'ca', 'thal', 'restecg']
+ohe = OneHotEncoder(categories='auto')
+feature_arr = ohe.fit_transform(data[cats]).toarray()
+feature_labels = ohe.categories_
+label = []
+for i in range(len(cats)):
+    for lbl in feature_labels[i]:
+        label.append(cats[i] + str(lbl))
+    
+    data = data.drop(cats[i], axis=1)
+data[label] = feature_arr
+#data = data.drop(['chol', 'fbs'], axis=1)
 
 accs = []
 for ex in range(numExperiments):

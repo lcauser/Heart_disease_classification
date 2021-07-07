@@ -131,3 +131,29 @@ plt.plot(history.history['val_accuracy'])
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.legend(['Train', 'Test'])
+
+#%% Plot the histogram of results
+bins = np.linspace(0, 1, 51)
+plt.hist(accs, bins, density=True)
+plt.xlabel('Accuracy')
+plt.ylabel('Proability Density')
+plt.plot([np.mean(accs), np.mean(accs)], [0, 14], linestyle=':', color='red')
+plt.xlim([0.6, 1.0])
+
+#%% Do a bootstrapped analysis of the accuracys
+num = 10000
+sz = np.size(accs)
+means = []
+for ex in range(num):
+    nums = np.random.randint(sz, size=sz)
+    newAccs = []
+    for num in nums:
+        newAccs.append(accs[num])
+    means.append(np.mean(newAccs))
+
+bins = np.linspace(0, 1, 51)
+plt.hist(newAccs, bins, density=True)
+plt.xlabel('Mean Bootstrapped Accuracy')
+plt.ylabel('Proability Density')
+plt.plot([np.mean(accs), np.mean(accs)], [0, 14], linestyle=':', color='red')
+plt.xlim([0.6, 1.0])
